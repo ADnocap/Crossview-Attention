@@ -30,7 +30,8 @@ class Model(nn.Module):
         lookback_steps: int,        # How many timesteps to look back 
         forecast_steps: int,        # How many timesteps to predict 
         
-
+        # === Model Configurations ===
+        skip_connections: bool = True, # Whether to use skip connections in the model
         d_model: int = 128, # NEED TO BE THE SAME FOR BOTH STREAMS FOR CROSS-ATTENTION
         # === Stream 1: iTransformer ===
         # Processes variates as tokens to capture multivariate relationships
@@ -58,6 +59,16 @@ class Model(nn.Module):
         self.num_variates = num_variates
         self.lookback_steps = lookback_steps
         self.forecast_steps = forecast_steps
+        self.skip_connections = skip_connections
+
+        # Skip connection: simple linear baseline
+        if skip_connections:
+            # Project from lookback to forecast dimension
+            # [B, T, C] -> [B, F, C] via learned linear transform
+            self.input_proj = nn.Linear(lookback_steps, forecast_steps)
+            
+            # Learnable scaling factor for residual
+            self.residual_scale = nn.Parameter(torch.tensor(0.1))
         
         # ===== STREAM 1: iTransformer =====
         # Input:  [B, lookback_steps, num_variates]
@@ -113,6 +124,13 @@ class Model(nn.Module):
         B, T, C = x.shape  # batch, time, channels(variates)
         assert T == self.lookback_steps, f"Expected {self.lookback_steps} lookback steps, got {T}"
         assert C == self.num_variates, f"Expected {self.num_variates} variates, got {C}"
+
+        # ===== SKIP CONNECTION (if enabled) =====
+        if self.skip_connections:
+            # Project input: [B, T, C] -> [B, C, T] -> [B, C, F]
+            x_transposed = x.transpose(1, 2)  # [B, C, T]
+            skip = self.input_proj(x_transposed)  # [B, C, F]
+            skip = skip.transpose(1, 2)  # [B, F, C]
         
         # ===== STREAM 1: iTransformer =====
         # [B, T, C] -> [B, C, D]
@@ -127,11 +145,14 @@ class Model(nn.Module):
         fused = self.fusion(stream1_out, stream2_out)
         
         # ===== PREDICT =====
-        # [B, C, D1+D2] -> [B, C, forecast_steps]
+        # [B, C, 2*D] -> [B, C, forecast_steps] -> [B, forecast_steps, C]
         predictions = self.projection(fused) 
-        
-        # Transpose to standard time series format: [B, forecast_steps, C]
-        predictions = predictions.transpose(1, 2)
+        predictions = predictions.transpose(1, 2) 
+
+        # ===== ADD SKIP CONNECTION =====
+        if self.skip_connections:
+            # Residual: predictions = model_output + scale * baseline
+            predictions = predictions + self.residual_scale * skip
 
         return predictions 
     

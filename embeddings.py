@@ -1,16 +1,6 @@
-"""
-Embedding layers for dual-stream time series forecasting
-
-Core components:
-- VariateEmbedding: For iTransformer stream (embeds entire time series)
-- PatchEmbedding: For Powerformer stream (convolutional patching)
-- PositionalEncoding: Sinusoidal positional encoding for patches
-"""
-
 import torch
 import torch.nn as nn
 import math
-
 
 class VariateEmbedding(nn.Module):
     """

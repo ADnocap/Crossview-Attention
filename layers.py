@@ -1,14 +1,3 @@
-"""
-Transformer layers for dual-stream time series forecasting
-
-Core components:
-- MultiHeadAttention: Standard attention for iTransformer
-- WeightedCausalAttention: Power-law decay attention for Powerformer  
-- FeedForward: Position-wise feed-forward network
-- TransformerEncoderLayer: Combines attention + FFN for iTransformer
-- PowerformerEncoderLayer: Combines WCMHA + FFN for Powerformer
-"""
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -18,9 +7,7 @@ import math
 class MultiHeadAttention(nn.Module):
     """
     Standard multi-head self-attention
-    Used in iTransformer stream
     """
-    
     def __init__(self, d_model: int, n_heads: int, dropout: float = 0.1):
         super().__init__()
         assert d_model % n_heads == 0, "d_model must be divisible by n_heads"
@@ -74,11 +61,9 @@ class MultiHeadAttention(nn.Module):
 class WeightedCausalAttention(nn.Module):
     """
     Weighted Causal Multi-head Attention (WCMHA) with power-law decay
-    Used in Powerformer stream
     
     Applies causal mask + power-law decay to attention scores
     """
-    
     def __init__(
         self,
         d_model: int,
@@ -110,23 +95,18 @@ class WeightedCausalAttention(nn.Module):
         Returns:
             [seq_len, seq_len] mask where M[i,j] = -α*log(i-j) for j<=i, -inf for j>i
         """
-        mask = torch.zeros(seq_len, seq_len, device=device)
+        i = torch.arange(seq_len, device=device).view(-1, 1)
+        j = torch.arange(seq_len, device=device).view(1, -1)
         
-        for i in range(seq_len):
-            for j in range(i + 1):
-                if i == j:
-                    # Same position, no decay
-                    mask[i, j] = 0.0
-                else:
-                    # Power-law decay: -α * log(Δt)
-                    delta_t = i - j
-                    mask[i, j] = -self.decay_scale * math.log(delta_t)
+        delta_t = (i - j).float()
+        mask = torch.zeros_like(delta_t)
         
-        # Causal mask: set future positions to -inf
-        mask = mask.masked_fill(
-            torch.triu(torch.ones(seq_len, seq_len, device=device), diagonal=1).bool(),
-            float('-inf')
-        )
+        # Apply power-law decay only to valid positions
+        valid = delta_t > 0
+        mask[valid] = -self.decay_scale * torch.log(delta_t[valid])
+        
+        # Causal mask
+        mask = mask.masked_fill(j > i, float('-inf'))
         
         return mask
     
@@ -167,9 +147,7 @@ class WeightedCausalAttention(nn.Module):
 class FeedForward(nn.Module):
     """
     Position-wise feed-forward network
-    Used in both iTransformer and Powerformer
     """
-    
     def __init__(self, d_model: int, d_ff: int, dropout: float = 0.1):
         super().__init__()
         self.linear1 = nn.Linear(d_model, d_ff)
@@ -192,12 +170,8 @@ class FeedForward(nn.Module):
     
 class CrossAttentionFusion(nn.Module):
     """
-    Cross-attention to fuse two streams
-    
-    Stream1 attends to Stream2, Stream2 attends to Stream1
-    Then combines with gating mechanism
+    Cross-attention fusion between two streams
     """
-    
     def __init__(self, d_model: int, n_heads: int, dropout: float = 0.1):
         super().__init__()
         assert d_model % n_heads == 0, "d_model must be divisible by n_heads"

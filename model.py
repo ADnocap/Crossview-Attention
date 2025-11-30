@@ -65,7 +65,7 @@ class Model(nn.Module):
         # Input:  [B, lookback_steps, num_variates]
         # Output: [B, num_variates, d_model]
         self.stream1 = iTransformerStream(
-            c_in=num_variates,
+            num_variates=num_variates,
             lookback_steps=lookback_steps,
             d_model=d_model,
             n_heads=n_heads_s1,

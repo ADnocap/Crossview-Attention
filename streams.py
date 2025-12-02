@@ -102,6 +102,9 @@ class PowerformerStream(nn.Module):
                 'dropout1': dropout1,
                 'dropout2': dropout2,
             }))
+
+        # Projection head to aggregate patches
+        self.head = nn.Linear(self.num_patches * d_model, d_model)
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         B, T, C = x.shape
@@ -125,8 +128,9 @@ class PowerformerStream(nn.Module):
             x = x + layer['dropout2'](ffn_out)
             x = layer['norm2'](x)
         
-        # Pool over patches: [B*C, N, D] -> [B*C, D]
-        x = x.mean(dim=1)
+        # Flatten patches and project: [B*C, N, D] -> [B*C, N*D] -> [B*C, D]
+        x = x.reshape(B * C, -1)  # [B*C, N*D]
+        x = self.head(x)  # [B*C, D]
         
         # Reshape back: [B*C, D] -> [B, C, D]
         x = x.view(B, C, -1)

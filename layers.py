@@ -68,8 +68,7 @@ class WeightedCausalAttention(nn.Module):
         self,
         d_model: int,
         n_heads: int,
-        decay_scale: float = 0.25,  # alpha parameter
-        dropout: float = 0.1,
+        decay_scale: float = 0.25  # alpha parameter
     ):
         super().__init__()
         assert d_model % n_heads == 0, "d_model must be divisible by n_heads"

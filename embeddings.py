@@ -10,7 +10,7 @@ class VariateEmbedding(nn.Module):
     Output: [B, C, D] where D=d_model
     """
     
-    def __init__(self, seq_len: int, d_model: int, dropout: float = 0.1):
+    def __init__(self, seq_len: int, d_model: int):
         super().__init__()
         self.seq_len = seq_len
         self.d_model = d_model

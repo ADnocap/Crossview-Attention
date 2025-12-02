@@ -17,9 +17,7 @@ class VariateEmbedding(nn.Module):
         
         # MLP: R^T -> R^D for each variate
         self.embedding = nn.Sequential(
-            nn.Linear(seq_len, d_model),
-            nn.ReLU(),
-            nn.Dropout(dropout)
+            nn.Linear(seq_len, d_model)
         )
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:

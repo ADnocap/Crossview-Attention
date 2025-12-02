@@ -47,9 +47,11 @@ where $\gamma \in [0,1]$ balances the contribution of each view, allowing the mo
 ## The dual-view approach captures:
 
 **Temporal Correlations** (Standard Layout): 
+
 $$\text{Corr}_{\text{time}}(t_i, t_j) = \frac{\langle X_{t_i}, X_{t_j} \rangle}{\|X_{t_i}\| \|X_{t_j}\|}$$
 
 **Variate Correlations** (Inverted Layout):
+
 $$\text{Corr}_{\text{var}}(d_i, d_j) = \frac{\langle X_{:,d_i}, X_{:,d_j} \rangle}{\|X_{:,d_i}\| \|X_{:,d_j}\|}$$
 
 Both perspectives provide complementary inductive biases that can improve forecasting performance.

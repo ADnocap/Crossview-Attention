@@ -8,9 +8,11 @@ This project merges inverted variate-token Transformers with locality-biased att
 Given a multivariate time-series $X \in \mathbb{R}^{T \times D}$ where $T$ is the sequence length and $D$ is the number of variates, the framework explores two encoding perspectives:
 
 **Standard Layout**: Each token represents a time step across all variates
+
 $$\text{Token}_t = [x_{t,1}, x_{t,2}, \ldots, x_{t,D}]$$
 
 **Inverted Layout**: Each token represents a single variate across time
+
 $$\text{Token}_d = [x_{1,d}, x_{2,d}, \ldots, x_{T,d}]$$
 
 ### Locality-Biased Attention

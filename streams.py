@@ -18,7 +18,7 @@ class iTransformerStream(nn.Module):
         super().__init__()
         
         # Embedding
-        self.embedding = VariateEmbedding(lookback_steps, d_model, dropout)
+        self.embedding = VariateEmbedding(lookback_steps, d_model)
         
         # Build encoder layers
         self.encoder_layers = nn.ModuleList()

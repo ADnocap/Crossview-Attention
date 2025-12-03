@@ -1,8 +1,3 @@
-"""
-Dual-Stream Time Series Forecasting Model with Cross-Attention
-
-"""
-
 import torch
 import torch.nn as nn
 from typing import Optional

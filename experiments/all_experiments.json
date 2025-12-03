@@ -1,0 +1,47 @@
+[
+  {
+    "experiment_name": "test",
+    "timestamp": "20251203_194524",
+    "model_file": "model_test_20251203_194524.pth",
+    "training_config": {
+      "num_epochs": 1,
+      "learning_rate": 0.001,
+      "weight_decay": 0.001,
+      "use_scheduler": true,
+      "scheduler_factor": 0.5,
+      "scheduler_patience": 1,
+      "batch_size": 32
+    },
+    "model_info": {
+      "total_parameters": 584047,
+      "trainable_parameters": 584047
+    },
+    "final_metrics": {
+      "train_loss_mse": 0.132985,
+      "test_loss_mse": 0.124189,
+      "test_mae": 0.155958,
+      "final_lr": 0.001
+    },
+    "best_metrics": {
+      "best_train_loss": 0.132985,
+      "best_test_loss": 0.124189,
+      "best_test_mae": 0.155958,
+      "best_epoch_train": 1,
+      "best_epoch_test": 1
+    },
+    "training_history": {
+      "train_losses": [
+        0.132985
+      ],
+      "test_losses": [
+        0.124189
+      ],
+      "test_maes": [
+        0.155958
+      ],
+      "learning_rates": [
+        0.001
+      ]
+    }
+  }
+]

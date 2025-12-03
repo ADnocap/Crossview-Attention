@@ -87,7 +87,7 @@ class PowerformerStream(nn.Module):
         # Build encoder layers
         self.encoder_layers = nn.ModuleList()
         for _ in range(n_layers):
-            attn = WeightedCausalAttention(d_model, n_heads, attn_decay_scale, dropout)
+            attn = WeightedCausalAttention(d_model, n_heads, attn_decay_scale)
             ffn = FeedForward(d_model, d_ff, dropout)
             norm1 = nn.LayerNorm(d_model)
             norm2 = nn.LayerNorm(d_model)

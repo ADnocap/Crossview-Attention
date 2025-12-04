@@ -4,7 +4,7 @@ import math
 
 class VariateEmbedding(nn.Module):
     """
-    embeds entire time series as a variate token
+    Embeds entire time series as a variate token
     
     Input:  [B, T, C] where T=seq_len, C=num_variates
     Output: [B, C, D] where D=d_model
@@ -96,7 +96,7 @@ class PatchEmbedding(nn.Module):
 
 class PositionalEncoding(nn.Module):
     """
-    Sinusoidal positional encoding for patch sequences
+    Sinusoidal positional encoding for patch sequences as per paper
     """
     
     def __init__(self, d_model: int, max_len: int = 1000, dropout: float = 0.1):

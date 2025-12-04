@@ -18,9 +18,7 @@ class Trainer:
         learning_rate=1e-3,
         weight_decay=1e-5
     ):
-        """
-        Initialize trainer.
-        
+        """       
         Args:
             model: PyTorch model to train
             train_loader: DataLoader for training data
@@ -130,9 +128,7 @@ class Trainer:
         num_plot_samples=5,
         num_plot_variates=4
     ):
-        """
-        Train the model.
-        
+        """       
         Args:
             num_epochs: Number of epochs to train
             use_scheduler: Whether to use ReduceLROnPlateau scheduler

@@ -58,7 +58,7 @@ class iTransformerStream(nn.Module):
         
         return x  # [B, C, D]
 
-
+# mostly unchanged from paper except for the projection head and multi-variate handling
 class PowerformerStream(nn.Module):
     def __init__(
         self,

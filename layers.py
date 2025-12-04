@@ -6,7 +6,7 @@ import math
 
 class MultiHeadAttention(nn.Module):
     """
-    Standard multi-head self-attention
+    Multi-head self-attention
     """
     def __init__(self, d_model: int, n_heads: int, dropout: float = 0.1):
         super().__init__()
@@ -61,7 +61,6 @@ class MultiHeadAttention(nn.Module):
 class WeightedCausalAttention(nn.Module):
     """
     Weighted Causal Multi-head Attention (WCMHA) with power-law decay
-    
     Applies causal mask + power-law decay to attention scores
     """
     def __init__(

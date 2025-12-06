@@ -1,8 +1,8 @@
 [
   {
-    "experiment_name": "test_small_cpu",
-    "timestamp": "20251204_012338",
-    "model_file": "model_test_small_cpu_20251204_012338.pth",
+    "experiment_name": "small_cpu",
+    "timestamp": "20251206_232812",
+    "model_file": "model_small_cpu_20251206_232812.pth",
     "training_config": {
       "num_epochs": 2,
       "learning_rate": 0.001,
@@ -10,37 +10,86 @@
       "use_scheduler": true,
       "scheduler_factor": 0.5,
       "scheduler_patience": 1,
-      "batch_size": 32
+      "batch_size": 8
     },
     "model_info": {
-      "total_parameters": 584047,
-      "trainable_parameters": 584047
+      "total_parameters": 858785,
+      "trainable_parameters": 858785
     },
     "final_metrics": {
-      "train_loss_mse": 0.098756,
-      "test_loss_mse": 0.053545,
-      "test_mae": 0.074478,
+      "train_loss_mse": 0.701191,
+      "test_loss_mse": 0.431598,
+      "test_mae": 0.434712,
       "final_lr": 0.001
     },
     "best_metrics": {
-      "best_train_loss": 0.098756,
-      "best_test_loss": 0.053545,
-      "best_test_mae": 0.074478,
+      "best_train_loss": 0.701191,
+      "best_test_loss": 0.431598,
+      "best_test_mae": 0.434712,
       "best_epoch_train": 2,
       "best_epoch_test": 2
     },
     "training_history": {
       "train_losses": [
-        0.123365,
-        0.098756
+        0.716388,
+        0.701191
       ],
       "test_losses": [
-        0.055144,
-        0.053545
+        0.43677,
+        0.431598
       ],
       "test_maes": [
-        0.083246,
-        0.074478
+        0.448585,
+        0.434712
+      ],
+      "learning_rates": [
+        0.001,
+        0.001
+      ]
+    }
+  },
+  {
+    "experiment_name": "small_cpu",
+    "timestamp": "20251206_235330",
+    "model_file": "model_small_cpu_20251206_235330.pth",
+    "training_config": {
+      "num_epochs": 2,
+      "learning_rate": 0.001,
+      "weight_decay": 0.001,
+      "use_scheduler": true,
+      "scheduler_factor": 0.5,
+      "scheduler_patience": 1,
+      "batch_size": 8
+    },
+    "model_info": {
+      "total_parameters": 1319105,
+      "trainable_parameters": 1319105
+    },
+    "final_metrics": {
+      "train_loss_mse": 0.485288,
+      "test_loss_mse": 0.275117,
+      "test_mae": 0.313753,
+      "final_lr": 0.001
+    },
+    "best_metrics": {
+      "best_train_loss": 0.485288,
+      "best_test_loss": 0.275117,
+      "best_test_mae": 0.313753,
+      "best_epoch_train": 2,
+      "best_epoch_test": 2
+    },
+    "training_history": {
+      "train_losses": [
+        0.536147,
+        0.485288
+      ],
+      "test_losses": [
+        0.289871,
+        0.275117
+      ],
+      "test_maes": [
+        0.340603,
+        0.313753
       ],
       "learning_rates": [
         0.001,

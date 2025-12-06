@@ -4,6 +4,8 @@ import torch.nn as nn
 from layers import FeedForward, MultiHeadAttention, WeightedCausalAttention
 from embeddings import VariateEmbedding, PatchEmbedding, PositionalEncoding
 
+
+# unchanged from paper
 class iTransformerStream(nn.Module):
     def __init__(
         self,
@@ -58,7 +60,7 @@ class iTransformerStream(nn.Module):
         
         return x  # [B, C, D]
 
-# mostly unchanged from paper except for the projection head and multi-variate handling
+# mostly unchanged from paper 
 class PowerformerStream(nn.Module):
     def __init__(
         self,

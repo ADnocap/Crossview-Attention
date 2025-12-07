@@ -1,5 +1,11 @@
 # Crossview-Attention
+
 This project merges inverted variate-token Transformers with locality-biased attention masks to examine how different encoding layouts interact with causal decay patterns in forecasting tasks.
+
+## Data
+
+- **Weather** data from southern Jena, Germany, 2020-2021 [weather_data](https://www.bgc-jena.mpg.de/wetter/weather_data.html)
+- **Traffic** data from the Bay Area California, USA, 2025/03/01-04 [traffic_data](https://pems.dot.ca.gov/?dnode=Clearinghouse&type=station_5min&district_id=4&submit=Submit)
 
 ## Mathematical Framework
 
@@ -34,6 +40,7 @@ The framework models information decay over time using:
 $$w(t, \tau) = e^{-\alpha \cdot \tau}$$
 
 where $\tau = |t - t'|$ is the temporal distance and $\alpha$ is the decay rate. This ensures that:
+
 - Recent observations receive higher weight
 - Distant past information contributes proportionally less
 - Causal relationships are preserved (no future leakage)
@@ -48,7 +55,7 @@ where $\gamma \in [0,1]$ balances the contribution of each view, allowing the mo
 
 ## The dual-view approach captures:
 
-**Temporal Correlations** (Standard Layout): 
+**Temporal Correlations** (Standard Layout):
 
 $$\text{Corr}_{\text{time}}(t_i, t_j) = \frac{\langle X_{t_i}, X_{t_j} \rangle}{\|X_{t_i}\| \|X_{t_j}\|}$$
 

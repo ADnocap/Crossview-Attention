@@ -1,0 +1,2 @@
+data/traffic/*.txt filter=lfs diff=lfs merge=lfs -text
+data/weather/*.csv filter=lfs diff=lfs merge=lfs -text

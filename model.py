@@ -46,7 +46,8 @@ class Model(nn.Module):
         attn_decay_scale: float = 0.25,    # Decay rate (alpha)
 
         # === Fusion & Prediction ===
-        n_heads_fusion: int = 8, 
+        n_heads_fusion: int = 8,
+        use_fusion: bool = True,  # If False, concat streams directly instead of cross-attention
     ):
         super().__init__()
         
@@ -55,6 +56,7 @@ class Model(nn.Module):
         self.lookback_steps = lookback_steps
         self.forecast_steps = forecast_steps
         self.skip_connections = skip_connections
+        self.use_fusion = use_fusion
 
         # Skip connection: simple linear baseline
         if skip_connections:
@@ -97,11 +99,12 @@ class Model(nn.Module):
         # ===== FUSION & PREDICTION =====
         # Input:  [B, lookback_steps, num_variates]
         # Output: [B, num_variates, d_model]
-        self.fusion = CrossAttentionFusion(
-            d_model=d_model,
-            n_heads=n_heads_fusion,
-            dropout=(dropout_s1 + dropout_s2) / 2,
-        )
+        if use_fusion:
+            self.fusion = CrossAttentionFusion(
+                d_model=d_model,
+                n_heads=n_heads_fusion,
+                dropout=(dropout_s1 + dropout_s2) / 2,
+            )
         
         # [B, C, 2*D] -> [B, C, forecast_steps]
         self.projection = nn.Linear(d_model * 2, forecast_steps)
@@ -137,7 +140,11 @@ class Model(nn.Module):
         
         # ===== FUSION =====
         # [B, C, D], [B, C, D] -> [B, C, 2*D]
-        fused = self.fusion(stream1_out, stream2_out)
+        if self.use_fusion:
+            fused = self.fusion(stream1_out, stream2_out)
+        else:
+            # Simple concatenation without cross-attention
+            fused = torch.cat([stream1_out, stream2_out], dim=-1)
         
         # ===== PREDICT =====
         # [B, C, 2*D] -> [B, C, forecast_steps] -> [B, forecast_steps, C]
